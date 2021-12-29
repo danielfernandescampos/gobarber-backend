@@ -1,25 +1,19 @@
 import { Router } from 'express';
-import { uuid } from 'uuidv4';
-import { startOfHour, parseISO, isEqual } from 'date-fns';
+import { startOfHour, parseISO } from 'date-fns';
+import Appointment from '../models/Appointment';
+import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
 const appointmentsRouter = Router();
+const appointmentRepository = new AppointmentsRepository();
 
-interface Appointment {
-    id: string;
-    date: number | Date;
-    provider: string;
-}
-
-const appointments: Appointment[] = [];
+// SoC: separation of concerns
 
 appointmentsRouter.post('/', (request, response) => {  // não precisa passar o /appointments pq já está sendo passado no index
     const { provider, date } = request.body;
 
     const parsedDate = startOfHour(parseISO(date));
 
-    const findAppointmentInSameDate = appointments.find((appointment: Appointment) =>
-        isEqual(parsedDate, appointment.date)
-    );
+    const findAppointmentInSameDate = appointmentRepository.findByDate(parsedDate)
 
     if(findAppointmentInSameDate) {
         return response
@@ -27,18 +21,13 @@ appointmentsRouter.post('/', (request, response) => {  // não precisa passar o 
             .json({message: 'This appointment has already been booked'})
     }
 
-    const appointment = {
-        id: uuid(),
-        provider,
-        date: parsedDate,
-    };
+    const appointment = appointmentRepository.create({ provider, date: parsedDate });
 
-    appointments.push(appointment);
-
-    return response.json(appointment)
+    return response.json(appointment);
 })
 
 appointmentsRouter.get('/', (request, response) => {
+    const appointments = appointmentRepository.getAll()
     return response.json(appointments)
 })
 
