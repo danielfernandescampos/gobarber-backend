@@ -17,7 +17,7 @@ appointmentsRouter.get('/', async (request, response) => {
 
 appointmentsRouter.post('/', async (request, response) => {  // não precisa passar o /appointments pq já está sendo passado no index
     try {
-        const { provider, date } = request.body;
+        const { provider_id, date } = request.body;
 
         const parsedDate = parseISO(date);
 
@@ -25,7 +25,7 @@ appointmentsRouter.post('/', async (request, response) => {  // não precisa pas
 
         const appointment = await createAppointment.execute({
             date: parsedDate,
-            provider
+            provider_id
         })
 
         return response.json(appointment);

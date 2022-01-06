@@ -5,14 +5,14 @@ import AppointmentsRepository from '../repositories/AppointmentsRepository';
 
 interface RequestDTO {
     date: Date;
-    provider: string;
+    provider_id: string;
 }
 
 // dependency inversion: sempre que o service tiver uma dependencia externa (appointmentRepository), me vez de instanciar a classe dentro do service, vamos receber dentro do constructor
 
 class CreateAppointmentService {
 
-    public async execute({date, provider}: RequestDTO): Promise<Appointment> {
+    public async execute({date, provider_id}: RequestDTO): Promise<Appointment> {
 
         const appointmentRepository = getCustomRepository(AppointmentsRepository);
 
@@ -25,7 +25,7 @@ class CreateAppointmentService {
         }
 
         const appointment = appointmentRepository.create({
-            provider,
+            provider_id,
             date: appointmentDate });
 
         await appointmentRepository.save(appointment);
