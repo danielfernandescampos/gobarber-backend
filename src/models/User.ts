@@ -6,7 +6,7 @@ class User {
     id: string;
 
     @Column()
-    provider: string;
+    name: string;
 
     @Column()
     email: string;
