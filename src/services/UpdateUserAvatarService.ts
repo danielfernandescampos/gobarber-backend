@@ -4,6 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import uploadConfif from '../config/upload';
 import { fromString } from "uuidv4";
+import AppError from '../errors/AppError';
 
 interface Request {
     user_id: string;
@@ -15,7 +16,7 @@ export default class UpdateUserAvatarService {
         const usersRepository = getRepository(User);
         const user = await usersRepository.findOne(user_id);
         if(!user) {
-            throw new Error('Onlt authenticated users can change avatar.')
+            throw new AppError('Onlt authenticated users can change avatar.', 401)
         }
         if(user.avatar) {
             const userAvatarFilePath = path.join(uploadConfif.directory, user.avatar);
