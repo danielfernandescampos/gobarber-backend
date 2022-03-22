@@ -1,14 +1,14 @@
 import { getRepository } from "typeorm";
-import User from "../models/User";
 import path from 'path';
 import fs from 'fs';
-import uploadConfif from '../config/upload';
+import uploadConfif from '@config/upload';
 import { fromString } from "uuidv4";
-import AppError from '../errors/AppError';
+import User from "../infra/typeorm/entities/User";
+import AppError from "@shared/errors/AppError";
 
 interface Request {
     user_id: string;
-    avatarFileName: string;
+    avatarFileName: string | undefined;
 }
 
 export default class UpdateUserAvatarService {
@@ -25,7 +25,9 @@ export default class UpdateUserAvatarService {
                 await fs.promises.unlink(userAvatarFilePath)
             }
         }
-        user.avatar = avatarFileName;
+        if(avatarFileName) {
+            user.avatar = avatarFileName;
+        }
         await usersRepository.save(user);
         return user;
     }

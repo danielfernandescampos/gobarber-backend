@@ -1,6 +1,6 @@
 import { isEqual } from "date-fns";
-import Appointment from "../models/Appointment";
 import { EntityRepository, Repository } from 'typeorm';
+import Appointment from "../infra/typeorm/entities/Appointment";
 
 // DTO: data transfer objects -> para transmitir dados de um arquivo para o outro é bom usar objetos no JS
 // interface CreateAppointmentDTO {
